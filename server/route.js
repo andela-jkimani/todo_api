@@ -4,4 +4,6 @@ module.exports = function(app) {
   app.route('/todos')
     .get(Todo.readAll)
     .post(Todo.create);
+
+  app.get('/todos/:id', Todo.readOne);
 };

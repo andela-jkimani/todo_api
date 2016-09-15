@@ -27,11 +27,11 @@ module.exports = {
   },
 
   readOne: function(req, res) {
-    Document.findOne({ name: req.params.name }, function(err, todo) {
+    Todo.findById({ _id: req.params.id }, function(err, todo) {
       if (err) {
-        res.status(404).send({ message: 'ToDo not found' });
+        res.status(404).send({ message: err });
       }
-      return res.send(todo);
+      return res.json(todo);
     });
   }
 };
