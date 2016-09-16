@@ -5,5 +5,8 @@ module.exports = function(app) {
     .get(Todo.readAll)
     .post(Todo.create);
 
-  app.get('/todos/:id', Todo.readOne);
+  app.route('/todos/:id')
+    .get(Todo.readOne)
+    .put(Todo.update)
+    .delete(Todo.delete);
 };

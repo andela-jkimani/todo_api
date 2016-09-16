@@ -33,5 +33,25 @@ module.exports = {
       }
       return res.json(todo);
     });
+  },
+
+  update: function(req, res) {
+    // console.log(req)
+    Todo.findByIdAndUpdate({ _id: req.params.id },
+      { $set: { note: req.body.note } }, function(err, todo) {
+        todo.save(function() {
+          if (err) res.status(404).send();
+          return res.json({ success: true, message: 'Todo updated successfully' });
+        });
+      });
+  },
+
+  delete: function(req, res) {
+    Todo.findByIdAndRemove({ _id: req.params.id }, function(err) {
+      if (err) {
+        res.status(404).send();
+      }
+      return res.json({ success: true, message: 'Todo successfully deleted' });
+    });
   }
 };
