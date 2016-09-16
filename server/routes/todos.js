@@ -1,5 +1,5 @@
 module.exports = function(app) {
-  var Todo = require('./controller');
+  var Todo = require('../controllers/todos');
 
   app.route('/todos')
     .get(Todo.readAll)

@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
-var routes = require('./server/route');
+var routes = require('./server/routes/todos');
 var morgan = require('morgan');
 
 app.use(morgan('dev'));
