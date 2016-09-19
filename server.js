@@ -4,11 +4,13 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var routes = require('./server/routes');
 var morgan = require('morgan');
+var config = require('./server/config/config');
 
 app.use(morgan('dev'));
 
-mongoose.connect('mongodb://localhost:27017/todo_api');
+mongoose.connect(config.database);
 mongoose.Promise = global.Promise;
+app.set('mySecret', config.secret);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

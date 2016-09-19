@@ -9,4 +9,8 @@ module.exports = function(app) {
     .get(User.getOne)
     .put(User.update)
     .delete(User.delete);
+
+  app.post('/users/authenticate', User.authenticate);
+
+  // app.post('/users/login', User.logIn);
 };
