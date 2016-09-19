@@ -6,11 +6,9 @@ module.exports = function(app) {
     .post(User.create);
 
   app.route('/users/:id')
-    .get(User.getOne)
-    .put(User.update)
-    .delete(User.delete);
+    .get(User.authenticate, User.getOne)
+    .put(User.authenticate, User.update)
+    .delete(User.authenticate, User.delete);
 
-  app.post('/users/authenticate', User.authenticate);
-
-  // app.post('/users/login', User.logIn);
+  app.post('/users/logIn', User.logIn);
 };

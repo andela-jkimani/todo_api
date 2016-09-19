@@ -38,7 +38,7 @@ module.exports = {
   //   };
   // },
 
-  authenticate: function(req, res) {
+  logIn: function(req, res) {
     User.findOne({
       name: req.body.name
     }, function(err, user) {
@@ -54,12 +54,34 @@ module.exports = {
           });
           res.json({
             success: true,
-            message: 'Enjoy your token',
+            message: 'Successfully authenticated!',
             token: token
           });
         }
       }
     });
+  },
+
+  authenticate: function(req, res, next) {
+    // check header or url parameters or post parameters for token
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+    // decode token
+    if (token) {
+      jwt.verify(token, config.secret, function(err, decoded) {
+        if (err) {
+          res.json({ success: false, message: 'Token authentication failed' });
+        } else {
+          res.decoded = decoded;
+          next();
+        }
+      });
+    } else {
+      return res.status(403).send({
+        success: false,
+        message: 'No token provided'
+      });
+    }
   },
 
   getAll: function(req, res) {
