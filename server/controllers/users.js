@@ -20,24 +20,6 @@ module.exports = {
     });
   },
 
-  // logIn: function(req, res) {
-  //   User.findOne({
-  //     email: req.body.email
-  //   }), function(err, user) {
-  //     if (err) throw err;
-  //     if (!user) {
-  //       res.send({ success: false, message: 'User not found' });
-  //     } else {
-  //       console.log('Now logging in...');
-  //       if (req.body.password === user.password) {
-  //         res.json({ success: true, message: 'Successfully logged in' });
-  //       } else {
-  //         res.json({ success: true, message: 'Log in failed' });
-  //       }
-  //     }
-  //   };
-  // },
-
   logIn: function(req, res) {
     User.findOne({
       name: req.body.name

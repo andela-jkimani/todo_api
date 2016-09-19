@@ -1,12 +1,13 @@
 module.exports = function(app) {
   var Todo = require('../controllers/todos');
+  var User = require('../controllers/users');
 
   app.route('/todos')
-    .get(Todo.readAll)
-    .post(Todo.create);
+    .get(User.authenticate, Todo.readAll)
+    .post(User.authenticate, Todo.create);
 
   app.route('/todos/:id')
-    .get(Todo.readOne)
-    .put(Todo.update)
-    .delete(Todo.delete);
+    .get(User.authenticate, Todo.readOne)
+    .put(User.authenticate, Todo.update)
+    .delete(User.authenticate, Todo.delete);
 };
