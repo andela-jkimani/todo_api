@@ -76,7 +76,7 @@ module.exports = {
   },
 
   getOne: function(req, res) {
-    User.findById({ _id: req.params.id }, function(err, user) {
+    User.findOne({ _id: req.params.id }, function(err, user) {
       if (err) {
         res.status(404).send();
       }
