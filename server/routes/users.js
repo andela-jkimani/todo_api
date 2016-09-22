@@ -10,5 +10,8 @@ module.exports = function(app) {
     .put(User.authenticate, User.update)
     .delete(User.authenticate, User.delete);
 
-  app.post('/users/logIn', User.logIn);
+  app.post('/users/logIn', User.login);
+  // app.get('/users/logout', User.logout);
+
+  app.get('/users/roles/:role', User.authenticate, User.getByRole);
 };

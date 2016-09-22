@@ -1,6 +1,7 @@
 var User = require('../models/users');
 var jwt = require('jsonwebtoken');
 var config = require('../config/config');
+var bcrypt = require('bcrypt');
 
 module.exports = {
   create: function(req, res) {
@@ -9,37 +10,42 @@ module.exports = {
     user.name = req.body.name;
     user.email = req.body.email;
     user.password = req.body.password;
+    user.role = req.body.role;
 
     user.save(function(err) {
       if (err) {
-        console.log(err);
-        res.status(200).send();
+        res.send(err);
       } else {
         res.json({ success: true, message: 'User successfully created' });
       }
     });
   },
 
-  logIn: function(req, res) {
+  login: function(req, res) {
     User.findOne({
       name: req.body.name
     }, function(err, user) {
-      if (err) throw err;
-      if (!user) {
-        res.json({ success: false, message: 'User not found' });
-      } else if (user) {
-        if (user.password !== req.body.password) {
-          res.json({ success: false, message: 'Incorrect password' });
-        } else {
-          var token = jwt.sign(user, config.secret, {
-            expiresIn: 1440 // 24 hours
-          });
-          res.json({
-            success: true,
-            message: 'Successfully authenticated!',
-            token: token
-          });
-        }
+      if (err) {
+        res.send(err);
+      } else if (!user) {
+        res.send({ success: false, message: 'User not found' });
+      } else {
+        bcrypt.compare(req.body.password, user.password, function() {
+          if (err) {
+            res.send(err);
+          } else if (!user.password) {
+            res.send({ success: false, message: 'Incorrect password' });
+          } else {
+            var token = jwt.sign(user, config.secret, {
+              expiresIn: 1440 // 24 hours
+            });
+            res.json({
+              success: true,
+              message: 'Successfully authenticated!',
+              token: token
+            });
+          }
+        });
       }
     });
   },
@@ -75,6 +81,10 @@ module.exports = {
     });
   },
 
+  // getAll: function(req, res) {
+  //
+  // },
+
   getOne: function(req, res) {
     User.findOne({ _id: req.params.id }, function(err, user) {
       if (err) {
@@ -84,9 +94,19 @@ module.exports = {
     });
   },
 
+  getByRole: function(req, res) {
+    User.find({ role: req.params.role }, function(err, users) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.json(users);
+      }
+    });
+  },
+
   update: function(req, res) {
     User.findByIdAndUpdate({ _id: req.params.id },
-      { $set: { name: req.body.name } }, function(err, user) {
+      { $set: req.body }, function(err, user) {
         user.save(function() {
           if (err) {
             res.status(404).send();
@@ -104,4 +124,13 @@ module.exports = {
       return res.json({ success: true, message: 'User successfully deleted' });
     });
   }
+
+  // logout: function(req, res) {
+  //   delete req.decoded;
+  //   if (req.decoded) {
+  //     res.send({ success: false, message: 'Did not logout' });
+  //   } else {
+  //     res.send({ success: true, message: 'Successfully logged out' });
+  //   }
+  // }
 };

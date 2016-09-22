@@ -7,6 +7,16 @@ var TodoSchema = new mongoose.Schema({
   updated_at: {
     type: Date,
     default: Date.now
+  },
+  accessLevel: {
+    type: String,
+    enum: ['private', 'public'],
+    required: true
+  },
+  ownerId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   }
 });
 
